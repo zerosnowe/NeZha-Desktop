@@ -1,0 +1,5 @@
+MainPackage=E:\原生项目\NeZha-Desktop\NeZha-Desktop\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\NeZha-Desktop_1.0.0.0_x64_Debug.msix
+ResourcePack=E:\原生项目\NeZha-Desktop\NeZha-Desktop\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\NeZha-Desktop_1.0.0.0_scale-100.msix
+ResourcePack=E:\原生项目\NeZha-Desktop\NeZha-Desktop\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\NeZha-Desktop_1.0.0.0_scale-125.msix
+ResourcePack=E:\原生项目\NeZha-Desktop\NeZha-Desktop\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\NeZha-Desktop_1.0.0.0_scale-150.msix
+ResourcePack=E:\原生项目\NeZha-Desktop\NeZha-Desktop\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\NeZha-Desktop_1.0.0.0_scale-400.msix

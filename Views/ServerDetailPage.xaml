@@ -1,0 +1,381 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NeZha_Desktop.Views.ServerDetailPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer>
+        <Grid Padding="20" RowSpacing="12" Background="Transparent">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ProgressBar
+                Grid.Row="0"
+                Height="3"
+                IsIndeterminate="True"
+                Visibility="{Binding ShowLoadingIndicator, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+            <Border Grid.Row="1" Padding="16" Style="{StaticResource CardBorderStyle}">
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="{Binding Detail.Name}" Style="{ThemeResource TitleTextBlockStyle}" />
+                        <TextBlock Text="{Binding Detail.Ip}" Opacity="0.8" />
+                    </StackPanel>
+                    <Button
+                        Grid.Column="1"
+                        MinWidth="84"
+                        Content="刷新"
+                        Command="{Binding RefreshCommand}" />
+                </Grid>
+            </Border>
+
+            <NavigationView
+                x:Name="DetailModeNav"
+                Grid.Row="2"
+                Height="52"
+                HorizontalAlignment="Left"
+                Margin="0,0,0,4"
+                Background="Transparent"
+                IsBackButtonVisible="Collapsed"
+                IsPaneToggleButtonVisible="False"
+                IsSettingsVisible="False"
+                PaneDisplayMode="Top"
+                SelectionChanged="DetailModeNav_OnSelectionChanged">
+                <NavigationView.MenuItems>
+                    <NavigationViewItem x:Name="DetailModeNavItem" Content="详情" Tag="detail">
+                        <NavigationViewItem.Icon>
+                            <SymbolIcon Symbol="Preview" />
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
+                    <NavigationViewItem x:Name="NetworkModeNavItem" Content="网络" Tag="network">
+                        <NavigationViewItem.Icon>
+                            <SymbolIcon Symbol="Globe" />
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
+                </NavigationView.MenuItems>
+            </NavigationView>
+
+            <Grid
+                Grid.Row="3"
+                Visibility="{Binding IsDetailTab, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Grid ColumnSpacing="12" RowSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardBorderStyle}">
+                        <StackPanel Spacing="8" MinHeight="180">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE9D9;" />
+                                <TextBlock Text="CPU" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding Detail.Cpu}" FontSize="18" FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding Detail.CpuInfo}" Opacity="0.8" MaxLines="2" TextTrimming="CharacterEllipsis" />
+                            <Canvas x:Name="CpuCardCanvas" Height="72" SizeChanged="MetricCardCanvas_OnSizeChanged" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CardBorderStyle}">
+                        <StackPanel Spacing="8" MinHeight="180">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xEFC5;" />
+                                <TextBlock Text="内存" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding Detail.Memory}" FontSize="18" FontWeight="SemiBold" />
+                            <TextBlock Text="实时内存数据" Opacity="0.8" />
+                            <Canvas x:Name="MemoryCardCanvas" Height="72" SizeChanged="MetricCardCanvas_OnSizeChanged" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource CardBorderStyle}">
+                        <StackPanel Spacing="8" MinHeight="180">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xEDA2;" />
+                                <TextBlock Text="磁盘" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding Detail.Disk}" FontSize="18" FontWeight="SemiBold" />
+                            <TextBlock Text="磁盘占用数据" Opacity="0.8" />
+                            <Canvas x:Name="DiskCardCanvas" Height="72" SizeChanged="MetricCardCanvas_OnSizeChanged" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CardBorderStyle}">
+                        <StackPanel Spacing="8" MinHeight="180">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE770;" />
+                                <TextBlock Text="系统" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                            </StackPanel>
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image
+                                    Grid.Column="0"
+                                    Width="20"
+                                    Height="20"
+                                    VerticalAlignment="Center"
+                                    Source="ms-appx:///Assets/windows.png"
+                                    Visibility="{Binding Detail.System, Converter={StaticResource ContainsWindowsToVisibilityConverter}}" />
+                                <TextBlock Grid.Column="1" Text="{Binding Detail.System}" FontWeight="SemiBold" />
+                            </Grid>
+                            <TextBlock Text="{Binding Detail.Ip}" Opacity="0.8" />
+                            <Canvas x:Name="SystemCardCanvas" Height="72" SizeChanged="MetricCardCanvas_OnSizeChanged" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CardBorderStyle}">
+                        <StackPanel Spacing="8" MinHeight="180">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xEC7A;" />
+                                <TextBlock Text="网络" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding Detail.Upload}" FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding Detail.Download}" Opacity="0.8" />
+                            <Canvas x:Name="NetworkCardCanvas" Height="72" SizeChanged="MetricCardCanvas_OnSizeChanged" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource CardBorderStyle}">
+                        <StackPanel Spacing="8" MinHeight="180">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE823;" />
+                                <TextBlock Text="运行状态" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding Detail.BootTime}" FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding Detail.LastReportTime}" Opacity="0.8" />
+                            <Canvas x:Name="RuntimeCardCanvas" Height="72" SizeChanged="MetricCardCanvas_OnSizeChanged" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+
+            <Grid
+                Grid.Row="3"
+                Visibility="{Binding IsNetworkTab, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Grid ColumnSpacing="12" RowSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardBorderStyle}">
+                        <StackPanel Spacing="8">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE898;" />
+                                <TextBlock Text="上传速率" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding Detail.UploadSpeed}" FontSize="18" FontWeight="SemiBold" />
+                            <TextBlock Text="当前上行速度" Opacity="0.8" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CardBorderStyle}">
+                        <StackPanel Spacing="8">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE896;" />
+                                <TextBlock Text="下载速率" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding Detail.DownloadSpeed}" FontSize="18" FontWeight="SemiBold" />
+                            <TextBlock Text="当前下行速度" Opacity="0.8" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource CardBorderStyle}">
+                        <StackPanel Spacing="8">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE9CE;" />
+                                <TextBlock Text="累计流量" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding Detail.UploadTotal}" FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding Detail.DownloadTotal}" Opacity="0.8" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CardBorderStyle}">
+                        <StackPanel Spacing="8">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE839;" />
+                                <TextBlock Text="TCP 连接数" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding Detail.TcpConnections}" FontSize="18" FontWeight="SemiBold" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CardBorderStyle}">
+                        <StackPanel Spacing="8">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE839;" />
+                                <TextBlock Text="UDP 连接数" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding Detail.UdpConnections}" FontSize="18" FontWeight="SemiBold" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource CardBorderStyle}">
+                        <StackPanel Spacing="8">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE821;" />
+                                <TextBlock Text="进程 / 负载" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding Detail.ProcessCount}" FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding Detail.LoadAverage}" Opacity="0.8" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource CardBorderStyle}">
+                        <StackPanel Spacing="10">
+                            <Grid ColumnSpacing="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="网络监控" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                                    <TextBlock Opacity="0.75">
+                                        <Run Text="当前周期: " />
+                                        <Run Text="{Binding MonitorPeriodDisplay}" />
+                                    </TextBlock>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6">
+                                    <Button Content="1天" Command="{Binding SetMonitorPeriod1dCommand}" />
+                                    <Button Content="7天" Command="{Binding SetMonitorPeriod7dCommand}" />
+                                    <Button Content="30天" Command="{Binding SetMonitorPeriod30dCommand}" />
+                                </StackPanel>
+                            </Grid>
+
+                            <Border
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="12"
+                                Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="200" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border
+                                        Grid.Column="0"
+                                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                        BorderThickness="0,0,1,0"
+                                        Padding="16">
+                                        <StackPanel VerticalAlignment="Center" Spacing="8">
+                                            <TextBlock Text="{Binding Detail.Name}" FontSize="24" FontWeight="Bold" MaxLines="2" TextWrapping="WrapWholeWords" />
+                                            <TextBlock Opacity="0.75">
+                                                <Run Text="{Binding NetworkMonitors.Count}" />
+                                                <Run Text=" 个监控点" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <ItemsControl Grid.Column="1" ItemsSource="{Binding NetworkMonitors}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapGrid Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border
+                                                    Width="260"
+                                                    MinHeight="112"
+                                                    Padding="12"
+                                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                    BorderThickness="0,0,1,1">
+                                                    <StackPanel Spacing="4">
+                                                        <TextBlock Text="{Binding MonitorName}" Opacity="0.9" MaxLines="1" TextTrimming="CharacterEllipsis" />
+                                                        <TextBlock Text="{Binding LatestDelay}" FontSize="34" FontWeight="Bold" />
+                                                        <StackPanel Orientation="Horizontal" Spacing="10">
+                                                            <TextBlock Opacity="0.75">
+                                                                <Run Text="↓ " />
+                                                                <Run Text="{Binding MinDelay}" />
+                                                            </TextBlock>
+                                                            <TextBlock Opacity="0.75">
+                                                                <Run Text="↑ " />
+                                                                <Run Text="{Binding MaxDelay}" />
+                                                            </TextBlock>
+                                                            <TextBlock Opacity="0.75">
+                                                                <Run Text="{Binding AverageLoss}" />
+                                                                <Run Text=" 丢包" />
+                                                            </TextBlock>
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Grid>
+                            </Border>
+
+                            <Border Style="{StaticResource CardBorderStyle}">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Text="网络延迟统计" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                                    <Border
+                                        Height="260"
+                                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="8"
+                                        Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
+                                        <Canvas
+                                            x:Name="NetworkChartCanvas"
+                                            Margin="8"
+                                            Background="Transparent"
+                                            PointerExited="NetworkChartCanvas_OnPointerExited"
+                                            PointerMoved="NetworkChartCanvas_OnPointerMoved"
+                                            SizeChanged="NetworkChartCanvas_OnSizeChanged" />
+                                    </Border>
+
+                                    <ItemsControl ItemsSource="{Binding NetworkMonitors}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapGrid Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal" Margin="0,0,12,6" Spacing="6">
+                                                    <Border
+                                                        Width="8"
+                                                        Height="8"
+                                                        CornerRadius="4"
+                                                        Background="{Binding SeriesColorHex, Converter={StaticResource HexColorToBrushConverter}}" />
+                                                    <TextBlock Text="{Binding MonitorName}" Opacity="0.85" MaxLines="1" TextTrimming="CharacterEllipsis" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+
+            <TextBlock Grid.Row="4" Foreground="IndianRed" Text="{Binding ErrorMessage}" TextWrapping="WrapWholeWords" />
+        </Grid>
+    </ScrollViewer>
+</Page>

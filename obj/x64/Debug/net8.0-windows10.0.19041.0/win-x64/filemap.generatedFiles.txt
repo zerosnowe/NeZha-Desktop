@@ -1,0 +1,10 @@
+obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\filemap.pri
+obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\filemap.map.txt
+obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\filemap.scale-100.pri
+obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\filemap.scale-100.map.txt
+obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\filemap.scale-125.pri
+obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\filemap.scale-125.map.txt
+obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\filemap.scale-150.pri
+obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\filemap.scale-150.map.txt
+obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\filemap.scale-400.pri
+obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\filemap.scale-400.map.txt

@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NeZha_Desktop.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <Style x:Key="SettingsCardStyle" TargetType="Border" BasedOn="{StaticResource CardBorderStyle}">
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="16,14" />
+            <Setter Property="MinHeight" Value="74" />
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Padding="8" Spacing="6">
+            <TextBlock FontSize="34" FontWeight="SemiBold" Text="设置" />
+            <TextBlock Opacity="0.75" Text="相关内容" />
+
+            <Border Style="{StaticResource SettingsCardStyle}">
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <FontIcon
+                        Width="20"
+                        Height="20"
+                        VerticalAlignment="Center"
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="18"
+                        Glyph="&#xE790;" />
+
+                    <StackPanel Grid.Column="1" Spacing="2">
+                        <TextBlock FontSize="16" FontWeight="SemiBold" Text="主题" />
+                        <TextBlock Opacity="0.75" Text="切换浅色、深色或跟随系统" />
+                    </StackPanel>
+
+                    <ComboBox x:ConnectionId='10'
+                        x:Name="ThemeComboBox"
+                        Grid.Column="2"
+                        Width="180"
+                        VerticalAlignment="Center"
+                                                                           >
+                        <ComboBoxItem Content="跟随系统 (推荐)" Tag="Default" />
+                        <ComboBoxItem Content="浅色" Tag="Light" />
+                        <ComboBoxItem Content="深色" Tag="Dark" />
+                    </ComboBox>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource SettingsCardStyle}">
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <FontIcon
+                        Width="20"
+                        Height="20"
+                        VerticalAlignment="Top"
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="18"
+                        Glyph="&#xE7F4;" />
+
+                    <StackPanel Grid.Column="1" Spacing="4">
+                        <TextBlock FontSize="16" FontWeight="SemiBold" Text="桌面组件" />
+                        <TextBlock x:ConnectionId='4' x:Name="DesktopWidgetSubtitleText" Opacity="0.75" Text="创建一个无边框、不在任务栏显示的服务器轮播窗口。" />
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock VerticalAlignment="Center" Opacity="0.8" Text="背景效果" />
+                            <ComboBox x:ConnectionId='9'
+                                x:Name="WidgetBackdropComboBox"
+                                Width="180"
+                                                                                            >
+                                <ComboBoxItem Content="Mica" Tag="Mica" />
+                                <ComboBoxItem Content="亚克力" Tag="Acrylic" />
+                                <ComboBoxItem Content="自定义背景" Tag="Custom" />
+                                <ComboBoxItem Content="纯文字（无背景）" Tag="TextOnly" />
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel x:ConnectionId='5' x:Name="CustomBackgroundRow" Orientation="Horizontal" Spacing="8">
+                            <TextBlock x:ConnectionId='6'
+                                x:Name="CustomBackgroundPathText"
+                                Width="240"
+                                VerticalAlignment="Center"
+                                Opacity="0.8"
+                                Text="未选择背景文件"
+                                TextTrimming="CharacterEllipsis" />
+                            <Button x:ConnectionId='7' Content="选择图片"                                              />
+                            <Button x:ConnectionId='8' Content="清空"                                             />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <ToggleSwitch x:ConnectionId='3'
+                        x:Name="DesktopWidgetToggle"
+                        Grid.Column="2"
+                        VerticalAlignment="Center"
+                                                                />
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource SettingsCardStyle}">
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <FontIcon
+                        Width="20"
+                        Height="20"
+                        VerticalAlignment="Center"
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="18"
+                        Glyph="&#xE946;" />
+
+                    <StackPanel Grid.Column="1" Spacing="2">
+                        <TextBlock FontSize="16" FontWeight="SemiBold" Text="关于" />
+                        <TextBlock x:ConnectionId='2' x:Name="AboutDescriptionText" Opacity="0.75" Text="NeZha Desktop" />
+                    </StackPanel>
+
+                    <FontIcon
+                        Grid.Column="2"
+                        VerticalAlignment="Center"
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="14"
+                        Glyph="&#xE72A;" />
+                </Grid>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>
+

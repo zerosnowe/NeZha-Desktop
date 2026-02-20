@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Source>C:\Users\zerosnowe\Pictures\logo.png</Source>
+    <SmallTileSource>C:\Users\zerosnowe\Pictures\logo.png</SmallTileSource>
+    <MediumTileSource>C:\Users\zerosnowe\Pictures\logo.png</MediumTileSource>
+    <WideTileSource>C:\Users\zerosnowe\Pictures\logo.png</WideTileSource>
+    <LargeTileSource>C:\Users\zerosnowe\Pictures\logo.png</LargeTileSource>
+    <AppIconSource>C:\Users\zerosnowe\Pictures\logo.png</AppIconSource>
+    <SplashScreenSource>C:\Users\zerosnowe\Pictures\logo.png</SplashScreenSource>
+    <PackageLogoSource>C:\Users\zerosnowe\Pictures\logo.png</PackageLogoSource>
+    <ActiveDebugProfile>NeZha-Desktop (Unpackaged)</ActiveDebugProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Update="App.xaml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Update="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+</Project>
