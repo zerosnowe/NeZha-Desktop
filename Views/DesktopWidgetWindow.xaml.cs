@@ -39,6 +39,7 @@ public sealed partial class DesktopWidgetWindow : Window
     private int _currentIndex;
     private string _backdropMode;
     private string? _customBackgroundPath;
+    private bool _keepVisualConsistencyOnDeactivate;
     private bool _isDragging;
     private uint _dragPointerId;
     private POINT _dragStartCursor;
@@ -46,12 +47,17 @@ public sealed partial class DesktopWidgetWindow : Window
 
     public event EventHandler? ExitRequested;
 
-    public DesktopWidgetWindow(IServerListSnapshotService snapshotService, string backdropMode, string? customBackgroundPath)
+    public DesktopWidgetWindow(
+        IServerListSnapshotService snapshotService,
+        string backdropMode,
+        string? customBackgroundPath,
+        bool keepVisualConsistencyOnDeactivate)
     {
         InitializeComponent();
         _snapshotService = snapshotService;
         _backdropMode = NormalizeMode(backdropMode);
         _customBackgroundPath = string.IsNullOrWhiteSpace(customBackgroundPath) ? null : customBackgroundPath;
+        _keepVisualConsistencyOnDeactivate = keepVisualConsistencyOnDeactivate;
         ApplyAppearance(_backdropMode, _customBackgroundPath);
 
         _rotationTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
@@ -115,6 +121,11 @@ public sealed partial class DesktopWidgetWindow : Window
         }
     }
 
+    public void SetKeepVisualConsistencyOnDeactivate(bool enabled)
+    {
+        _keepVisualConsistencyOnDeactivate = enabled;
+    }
+
     private static string NormalizeMode(string? mode)
     {
         if (string.Equals(mode, "Acrylic", StringComparison.OrdinalIgnoreCase))
@@ -165,13 +176,42 @@ public sealed partial class DesktopWidgetWindow : Window
         {
             var hwnd = WindowNative.GetWindowHandle(this);
             Win32WindowStyler.ApplyWidgetWindowStyle(hwnd);
-            ApplyAppearance(_backdropMode, _customBackgroundPath);
+            if (args.WindowActivationState == WindowActivationState.Deactivated && _keepVisualConsistencyOnDeactivate)
+            {
+                ApplyInactiveFallbackVisual();
+            }
+            else
+            {
+                ApplyAppearance(_backdropMode, _customBackgroundPath);
+            }
             EnsureBottomMost();
         }
         catch
         {
             // Ignore style errors on unsupported environments.
         }
+    }
+
+    private void ApplyInactiveFallbackVisual()
+    {
+        if (_backdropMode is "Custom" or "TextOnly")
+        {
+            ApplyAppearance(_backdropMode, _customBackgroundPath);
+            return;
+        }
+
+        SystemBackdrop = null;
+        RootCard.Background = new LinearGradientBrush
+        {
+            StartPoint = new Point(0, 0),
+            EndPoint = new Point(1, 1),
+            GradientStops =
+            {
+                new GradientStop { Color = ColorHelper.FromArgb(0xA6, 0xF1, 0xF5, 0xFB), Offset = 0.0 },
+                new GradientStop { Color = ColorHelper.FromArgb(0xA6, 0xE8, 0xEE, 0xF8), Offset = 1.0 },
+            }
+        };
+        RootCard.BorderBrush = new SolidColorBrush(ColorHelper.FromArgb(0x66, 0xD0, 0xD8, 0xE6));
     }
 
     private void DesktopWidgetWindow_Closed(object sender, WindowEventArgs args)

@@ -15,11 +15,13 @@ public sealed class DesktopWidgetService : IDesktopWidgetService
         IsEnabled = DesktopWidgetPreferenceStore.LoadEnabled();
         BackdropMode = DesktopWidgetPreferenceStore.LoadBackdropMode();
         CustomBackgroundPath = DesktopWidgetPreferenceStore.LoadCustomBackgroundPath();
+        KeepVisualConsistencyOnDeactivate = DesktopWidgetPreferenceStore.LoadKeepVisualConsistencyOnDeactivate();
     }
 
     public bool IsEnabled { get; private set; }
     public string BackdropMode { get; private set; }
     public string? CustomBackgroundPath { get; private set; }
+    public bool KeepVisualConsistencyOnDeactivate { get; private set; }
 
     public Task RestoreAsync()
     {
@@ -64,6 +66,7 @@ public sealed class DesktopWidgetService : IDesktopWidgetService
         try
         {
             _widgetWindow?.ApplyAppearance(BackdropMode, CustomBackgroundPath);
+            _widgetWindow?.SetKeepVisualConsistencyOnDeactivate(KeepVisualConsistencyOnDeactivate);
         }
         catch
         {
@@ -81,6 +84,23 @@ public sealed class DesktopWidgetService : IDesktopWidgetService
         try
         {
             _widgetWindow?.ApplyAppearance(BackdropMode, CustomBackgroundPath);
+            _widgetWindow?.SetKeepVisualConsistencyOnDeactivate(KeepVisualConsistencyOnDeactivate);
+        }
+        catch
+        {
+            // ignore
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public Task SetKeepVisualConsistencyOnDeactivateAsync(bool enabled)
+    {
+        KeepVisualConsistencyOnDeactivate = enabled;
+        DesktopWidgetPreferenceStore.SaveKeepVisualConsistencyOnDeactivate(enabled);
+        try
+        {
+            _widgetWindow?.SetKeepVisualConsistencyOnDeactivate(enabled);
         }
         catch
         {
@@ -107,7 +127,7 @@ public sealed class DesktopWidgetService : IDesktopWidgetService
 
         try
         {
-            _widgetWindow = new DesktopWidgetWindow(_snapshotService, BackdropMode, CustomBackgroundPath);
+            _widgetWindow = new DesktopWidgetWindow(_snapshotService, BackdropMode, CustomBackgroundPath, KeepVisualConsistencyOnDeactivate);
             _widgetWindow.ExitRequested += WidgetWindow_ExitRequested;
             _widgetWindow.Activate();
             return true;

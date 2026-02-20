@@ -9,6 +9,7 @@ public static class DesktopWidgetPreferenceStore
     private const string PackagedKey = "DesktopWidgetEnabled";
     private const string PackagedBackdropKey = "DesktopWidgetBackdropMode";
     private const string PackagedCustomBackgroundKey = "DesktopWidgetCustomBackgroundPath";
+    private const string PackagedKeepVisualConsistencyKey = "DesktopWidgetKeepVisualConsistencyOnDeactivate";
     private const string PackagedXKey = "DesktopWidgetX";
     private const string PackagedYKey = "DesktopWidgetY";
     private const string PackagedWidthKey = "DesktopWidgetWidth";
@@ -20,6 +21,7 @@ public static class DesktopWidgetPreferenceStore
         public bool Enabled { get; set; }
         public string BackdropMode { get; set; } = "Mica";
         public string? CustomBackgroundPath { get; set; }
+        public bool KeepVisualConsistencyOnDeactivate { get; set; } = true;
         public int? X { get; set; }
         public int? Y { get; set; }
         public int? Width { get; set; }
@@ -173,6 +175,53 @@ public static class DesktopWidgetPreferenceStore
             var settingFile = Path.Combine(AppEnvironment.GetAppDataDirectory(), FileName);
             var store = LoadStore(settingFile);
             store.CustomBackgroundPath = normalized;
+            var json = JsonSerializer.Serialize(store);
+            File.WriteAllText(settingFile, json);
+        }
+        catch
+        {
+            // ignore
+        }
+    }
+
+    public static bool LoadKeepVisualConsistencyOnDeactivate()
+    {
+        try
+        {
+            if (AppEnvironment.IsPackaged)
+            {
+                var settings = ApplicationData.Current.LocalSettings;
+                if (settings.Values.TryGetValue(PackagedKeepVisualConsistencyKey, out var value) && value is bool flag)
+                {
+                    return flag;
+                }
+
+                return true;
+            }
+
+            var settingFile = Path.Combine(AppEnvironment.GetAppDataDirectory(), FileName);
+            var store = LoadStore(settingFile);
+            return store.KeepVisualConsistencyOnDeactivate;
+        }
+        catch
+        {
+            return true;
+        }
+    }
+
+    public static void SaveKeepVisualConsistencyOnDeactivate(bool enabled)
+    {
+        try
+        {
+            if (AppEnvironment.IsPackaged)
+            {
+                ApplicationData.Current.LocalSettings.Values[PackagedKeepVisualConsistencyKey] = enabled;
+                return;
+            }
+
+            var settingFile = Path.Combine(AppEnvironment.GetAppDataDirectory(), FileName);
+            var store = LoadStore(settingFile);
+            store.KeepVisualConsistencyOnDeactivate = enabled;
             var json = JsonSerializer.Serialize(store);
             File.WriteAllText(settingFile, json);
         }

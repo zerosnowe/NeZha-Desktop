@@ -31,6 +31,9 @@
     <AppxPackagedFile Include="E:\原生项目\NeZha-Desktop\NeZha-Desktop\obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\apphost.exe">
       <PackagePath>NeZha-Desktop.exe</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\原生项目\NeZha-Desktop\NeZha-Desktop\Assets\AppIcon.ico">
+      <PackagePath>Assets\AppIcon.ico</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="E:\原生项目\NeZha-Desktop\NeZha-Desktop\obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\NeZha-Desktop.dll">
       <PackagePath>NeZha-Desktop.dll</PackagePath>
     </AppxPackagedFile>

@@ -2,9 +2,6 @@
   "profiles": {
     "NeZha-Desktop (Package)": {
       "commandName": "MsixPackage"
-    },
-    "NeZha-Desktop (Unpackaged)": {
-      "commandName": "Project"
     }
   }
 }

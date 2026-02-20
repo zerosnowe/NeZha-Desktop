@@ -1,0 +1,10 @@
+App.xbf
+MainWindow.xbf
+Views\DesktopWidgetWindow.xbf
+Views\HomePage.xbf
+Views\LoginPage.xbf
+Views\ServerDetailPage.xbf
+Views\ServerListPage.xbf
+Views\SettingsPage.xbf
+Views\ShellPage.xbf
+Views\UptimeKumaPage.xbf

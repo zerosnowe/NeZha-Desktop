@@ -96,6 +96,13 @@
                             <Button Content="选择图片" Click="SelectCustomBackgroundButton_OnClick" />
                             <Button Content="清空" Click="ClearCustomBackgroundButton_OnClick" />
                         </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock VerticalAlignment="Center" Opacity="0.8" Text="失焦时保持视觉一致" />
+                            <ToggleSwitch
+                                x:Name="WidgetKeepVisualToggle"
+                                Header=""
+                                Toggled="WidgetKeepVisualToggle_OnToggled" />
+                        </StackPanel>
                     </StackPanel>
 
                     <ToggleSwitch

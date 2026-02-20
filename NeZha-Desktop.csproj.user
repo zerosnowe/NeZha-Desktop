@@ -9,7 +9,7 @@
     <AppIconSource>C:\Users\zerosnowe\Pictures\logo.png</AppIconSource>
     <SplashScreenSource>C:\Users\zerosnowe\Pictures\logo.png</SplashScreenSource>
     <PackageLogoSource>C:\Users\zerosnowe\Pictures\logo.png</PackageLogoSource>
-    <ActiveDebugProfile>NeZha-Desktop (Unpackaged)</ActiveDebugProfile>
+    <ActiveDebugProfile>NeZha-Desktop (Package)</ActiveDebugProfile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
@@ -19,9 +19,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Update="MainWindow.xaml">
-      <SubType>Designer</SubType>
-    </None>
-    <None Update="Package.appxmanifest">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

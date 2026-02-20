@@ -48,6 +48,7 @@ namespace NeZha_Desktop.Views
                 CustomBackgroundRow.Visibility = string.Equals(_desktopWidgetService.BackdropMode, "Custom", StringComparison.OrdinalIgnoreCase)
                     ? Visibility.Visible
                     : Visibility.Collapsed;
+                WidgetKeepVisualToggle.IsOn = _desktopWidgetService.KeepVisualConsistencyOnDeactivate;
             }
             finally
             {
@@ -141,6 +142,16 @@ namespace NeZha_Desktop.Views
             }
 
             return $"v{version.Major}.{version.Minor}.{version.Build}";
+        }
+
+        private async void WidgetKeepVisualToggle_OnToggled(object sender, RoutedEventArgs e)
+        {
+            if (_isInitializing)
+            {
+                return;
+            }
+
+            await _desktopWidgetService.SetKeepVisualConsistencyOnDeactivateAsync(WidgetKeepVisualToggle.IsOn);
         }
     }
 }
